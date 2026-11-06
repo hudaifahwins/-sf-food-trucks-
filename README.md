@@ -17,11 +17,15 @@ npm run check
 npm start
 ```
 
-Open <http://localhost:3000>. The API is available at `GET /api/food-trucks?q=tacos&limit=100`.
+Open <http://localhost:3000>. The API includes:
+
+- `GET /api/food-trucks?q=tacos&limit=100` — normalized listings.
+- `GET /api/food-trucks/nearby?lat=37.77&lng=-122.42&radius=3&q=tacos` — radius-filtered, nearest-first discovery with distance metadata.
+- `GET /health` — deployment health check.
 
 The frontend also supports a static GitHub Pages deployment. Every push to `main` publishes `public/` through `.github/workflows/deploy-pages.yml`; on Pages, the browser queries the public DataSF endpoint directly.
 
-The server proxies DataSF so the browser has a same-origin API, the upstream query is bounded, and the UI is not coupled to the provider’s raw schema. DataSF availability is required at runtime; no API key is needed.
+The server proxies DataSF so the browser has a same-origin API, the upstream query is bounded, and the UI is not coupled to the provider’s raw schema. Responses are cached in memory for 60 seconds and stale cached data is served if DataSF briefly fails. The nearby endpoint caps the radius at 25 miles to protect the upstream and response size. DataSF availability is required for a cold start; no API key is needed.
 
 ## Production notes
 

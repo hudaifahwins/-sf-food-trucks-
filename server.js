@@ -2,7 +2,7 @@ import { createServer } from "node:http";
 import { readFile } from "node:fs/promises";
 import { extname, join, normalize } from "node:path";
 import { fileURLToPath } from "node:url";
-import { getFoodTrucks } from "./src/data.js";
+import { getFoodTrucks, getNearbyFoodTrucks } from "./src/data.js";
 
 const root = fileURLToPath(new URL(".", import.meta.url));
 const publicRoot = join(root, "public");
@@ -57,6 +57,29 @@ const server = createServer(async (request, response) => {
         limit: url.searchParams.get("limit") || "1000"
       });
       json(response, 200, { data: trucks, count: trucks.length });
+      return;
+    }
+
+    if (request.method === "GET" && url.pathname === "/api/food-trucks/nearby") {
+      const latitude = Number(url.searchParams.get("lat"));
+      const longitude = Number(url.searchParams.get("lng"));
+      if (!Number.isFinite(latitude) || !Number.isFinite(longitude) ||
+        latitude < -90 || latitude > 90 || longitude < -180 || longitude > 180) {
+        json(response, 400, { error: "Valid lat and lng coordinates are required." });
+        return;
+      }
+      const trucks = await getNearbyFoodTrucks({
+        latitude,
+        longitude,
+        radius: url.searchParams.get("radius") || "5",
+        query: url.searchParams.get("q") || ""
+      });
+      json(response, 200, { data: trucks, count: trucks.length });
+      return;
+    }
+
+    if (request.method === "GET" && url.pathname === "/health") {
+      json(response, 200, { status: "ok", service: "sf-food-trucks" });
       return;
     }
 

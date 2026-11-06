@@ -1,4 +1,6 @@
 const DATA_URL = "https://data.sf.gov/resource/rqzj-sfat.json";
+const CACHE_TTL_MS = 60_000;
+const cache = new Map();
 
 function toNumber(value) {
   if (value === null || value === undefined || String(value).trim() === "") return null;
@@ -23,8 +25,23 @@ export function normalizeTruck(record) {
   };
 }
 
+export function distanceInMiles(latitude, longitude, truck) {
+  const radians = Math.PI / 180;
+  const lat1 = latitude * radians;
+  const lat2 = truck.latitude * radians;
+  const deltaLat = (truck.latitude - latitude) * radians;
+  const deltaLon = (truck.longitude - longitude) * radians;
+  const arc = Math.sin(deltaLat / 2) ** 2 +
+    Math.cos(lat1) * Math.cos(lat2) * Math.sin(deltaLon / 2) ** 2;
+  return 3958.8 * 2 * Math.atan2(Math.sqrt(arc), Math.sqrt(1 - arc));
+}
+
 export async function getFoodTrucks({ query = "", limit = "1000", fetcher = fetch } = {}) {
   const safeLimit = Math.min(Math.max(Number.parseInt(limit, 10) || 1000, 1), 2000);
+  const cacheKey = `${query.trim().toLowerCase()}:${safeLimit}`;
+  const cached = cache.get(cacheKey);
+  if (cached && Date.now() - cached.createdAt < CACHE_TTL_MS) return cached.data;
+
   const params = new URLSearchParams({
     "$limit": String(safeLimit),
     "$where": "latitude IS NOT NULL AND longitude IS NOT NULL"
@@ -33,10 +50,25 @@ export async function getFoodTrucks({ query = "", limit = "1000", fetcher = fetc
     params.set("$q", query.trim().slice(0, 100));
   }
 
-  const response = await fetcher(`${DATA_URL}?${params}`);
-  if (!response.ok) {
-    throw new Error(`DataSF request failed with ${response.status}`);
+  try {
+    const response = await fetcher(`${DATA_URL}?${params}`);
+    if (!response.ok) {
+      throw new Error(`DataSF request failed with ${response.status}`);
+    }
+    const records = (await response.json()).map(normalizeTruck).filter(Boolean);
+    cache.set(cacheKey, { createdAt: Date.now(), data: records });
+    return records;
+  } catch (error) {
+    if (cached) return cached.data;
+    throw error;
   }
-  const records = await response.json();
-  return records.map(normalizeTruck).filter(Boolean);
+}
+
+export async function getNearbyFoodTrucks({ latitude, longitude, radius = "5", query = "", fetcher = fetch } = {}) {
+  const safeRadius = Math.min(Math.max(Number(radius) || 5, 0.1), 25);
+  const trucks = await getFoodTrucks({ query, limit: "2000", fetcher });
+  return trucks
+    .map((truck) => ({ ...truck, distanceMiles: distanceInMiles(latitude, longitude, truck) }))
+    .filter((truck) => truck.distanceMiles <= safeRadius)
+    .sort((a, b) => a.distanceMiles - b.distanceMiles);
 }

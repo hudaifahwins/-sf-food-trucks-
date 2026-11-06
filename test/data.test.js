@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { getFoodTrucks, normalizeTruck } from "../src/data.js";
+import { distanceInMiles, getFoodTrucks, getNearbyFoodTrucks, normalizeTruck } from "../src/data.js";
 
 test("normalizes a DataSF record into the public API shape", () => {
   assert.deepEqual(normalizeTruck({
@@ -42,4 +42,24 @@ test("queries DataSF and caps the requested limit", async () => {
   assert.equal(new URL(requestedUrl).searchParams.get("$limit"), "2000");
   assert.equal(new URL(requestedUrl).searchParams.get("$q"), "taco");
   assert.equal(trucks[0].name, "Taco Time");
+});
+
+test("sorts nearby trucks by distance and applies a radius", async () => {
+  const nearby = await getNearbyFoodTrucks({
+    latitude: 37,
+    longitude: -122,
+    radius: "5",
+    fetcher: async () => ({
+      ok: true,
+      json: async () => [
+        { applicant: "Far", latitude: "37.1", longitude: "-122" },
+        { applicant: "Near", latitude: "37.001", longitude: "-122" }
+      ]
+    })
+  });
+
+  assert.equal(nearby.length, 1);
+  assert.equal(nearby[0].name, "Near");
+  assert.ok(nearby[0].distanceMiles < 1);
+  assert.equal(Math.round(distanceInMiles(37, -122, nearby[0]) * 10) / 10, 0.1);
 });
