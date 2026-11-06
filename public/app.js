@@ -49,10 +49,22 @@ function render(items) {
 async function loadTrucks(query = "") {
   results.innerHTML = '<p class="empty">Loading the latest listings...</p>';
   try {
-    const response = await fetch(`/api/food-trucks${query ? `?q=${encodeURIComponent(query)}` : ""}`);
+    const apiUrl = window.location.hostname.endsWith("github.io")
+      ? `https://data.sfgov.org/resource/rqzj-sfat.json?$limit=1000&$where=latitude IS NOT NULL AND longitude IS NOT NULL${query ? `&$q=${encodeURIComponent(query)}` : ""}`
+      : `/api/food-trucks${query ? `?q=${encodeURIComponent(query)}` : ""}`;
+    const response = await fetch(apiUrl);
     if (!response.ok) throw new Error("Request failed");
     const payload = await response.json();
-    trucks = payload.data;
+    trucks = Array.isArray(payload) ? payload.map((record) => ({
+      id: `${record.locationid || record.applicant || "truck"}-${record.latitude}-${record.longitude}`,
+      name: record.applicant || "Unnamed food truck",
+      address: record.address || "San Francisco",
+      foodItems: record.fooditems || "Menu not listed",
+      schedule: record.dayshours || "Schedule not listed",
+      latitude: Number(record.latitude),
+      longitude: Number(record.longitude),
+      status: record.status || "Unknown"
+    })) : payload.data;
     render(trucks);
   } catch {
     results.innerHTML = '<p class="empty">We could not load listings right now. Please try again in a moment.</p>';

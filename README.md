@@ -19,6 +19,8 @@ npm start
 
 Open <http://localhost:3000>. The API is available at `GET /api/food-trucks?q=tacos&limit=100`.
 
+The frontend also supports a static GitHub Pages deployment. Every push to `main` publishes `public/` through `.github/workflows/deploy-pages.yml`; on Pages, the browser queries the public DataSF endpoint directly.
+
 The server proxies DataSF so the browser has a same-origin API, the upstream query is bounded, and the UI is not coupled to the provider’s raw schema. DataSF availability is required at runtime; no API key is needed.
 
 ## Production notes
