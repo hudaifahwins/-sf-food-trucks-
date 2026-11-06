@@ -3,53 +3,75 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="Find food trucks serving San Francisco right now.">
-    <title>Roam &amp; Relish | San Francisco food trucks</title>
+    <meta name="theme-color" content="#183c2b">
+    <meta name="description" content="Discover San Francisco food trucks, menus, and locations with live DataSF listings.">
+    <title>Roam &amp; Relish — San Francisco food trucks</title>
     <link rel="preconnect" href="https://unpkg.com">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
     <link rel="stylesheet" href="styles.css">
   </head>
   <body>
     <header class="topbar">
-      <a class="brand" href="/" aria-label="Roam and Relish home">
+      <a class="brand" href="./" aria-label="Roam and Relish home">
         <span class="brand-mark">R</span>
-        <span>Roam &amp; Relish</span>
+        <span>Roam <i>&amp;</i> Relish</span>
       </a>
-      <span class="data-note">Live DataSF listings</span>
+      <div class="topbar-meta"><span class="live-dot"></span><span>Live DataSF listings</span></div>
     </header>
-    <main class="app-shell">
-      <section class="hero">
-        <p class="eyebrow">San Francisco, served</p>
-        <h1>Find your next<br><em>great bite.</em></h1>
-        <p class="hero-copy">Explore the city’s food trucks, discover what’s nearby, and make lunch a little more memorable.</p>
-        <div class="search-wrap">
-          <label for="search">Search by truck, cuisine, or ingredient</label>
-          <div class="search-row">
-            <input id="search" type="search" placeholder="Try “tacos” or “coffee”" autocomplete="off">
-            <button id="locate" type="button" title="Use my location" aria-label="Use my location">⌖</button>
+
+    <main>
+      <section class="intro">
+        <div class="intro-copy">
+          <p class="eyebrow">The city is your menu</p>
+          <h1>Good food<br><em>finds you.</em></h1>
+          <p class="lead">A thoughtful guide to San Francisco’s mobile kitchens — from a quick lunch downtown to your next neighborhood favorite.</p>
+          <div class="search-box">
+            <label for="search">What are you craving?</label>
+            <div class="search-row">
+              <span class="search-icon" aria-hidden="true">⌕</span>
+              <input id="search" type="search" placeholder="Search tacos, coffee, or a truck name" autocomplete="off">
+              <button id="clear" class="clear-button" type="button" aria-label="Clear search" hidden>×</button>
+              <button id="locate" class="locate-button" type="button" title="Find trucks near me" aria-label="Find trucks near me">◎</button>
+            </div>
+          </div>
+          <div class="chips" aria-label="Popular searches">
+            <button type="button" data-query="tacos">Tacos</button>
+            <button type="button" data-query="coffee">Coffee</button>
+            <button type="button" data-query="pizza">Pizza</button>
+            <button type="button" data-query="dessert">Sweet tooth</button>
           </div>
         </div>
-        <div class="stats" aria-live="polite">
-          <strong id="count">Loading...</strong>
-          <span>trucks on the map</span>
+        <div class="intro-aside">
+          <span class="stamp">SF<br><b>est.</b><br>1847</span>
+          <div class="intro-stat"><strong id="count">—</strong><span>places to<br>explore</span></div>
+          <div class="intro-stat"><strong id="visible-count">—</strong><span>showing<br>on map</span></div>
         </div>
       </section>
-      <section class="map-panel" aria-label="Food truck map">
-        <div id="map"></div>
-        <div class="map-legend"><span class="legend-dot"></span> Food truck location</div>
-      </section>
-      <aside class="results-panel">
-        <div class="panel-heading">
-          <div>
-            <p class="eyebrow">Browse the map</p>
-            <h2>Food trucks</h2>
+
+      <section class="explorer" aria-label="Food truck explorer">
+        <div class="map-panel">
+          <div id="map"></div>
+          <div class="map-toolbar">
+            <span class="map-label"><span class="legend-dot"></span>Food truck locations</span>
+            <button id="reset-map" type="button">Reset view</button>
           </div>
-          <button id="clear" class="text-button" type="button" hidden>Clear</button>
         </div>
-        <div id="results" class="results" aria-live="polite"></div>
-      </aside>
+        <aside class="results-panel">
+          <div class="results-heading">
+            <div><p class="eyebrow">Your shortlist</p><h2>Find a bite</h2></div>
+            <span id="result-status" class="result-status">Loading</span>
+          </div>
+          <div class="results-meta"><span id="updated">Connecting to DataSF…</span><button id="sort-nearby" type="button" hidden>Nearest first</button></div>
+          <div id="results" class="results" aria-live="polite"></div>
+        </aside>
+      </section>
     </main>
-    <footer>Built with open data from <a href="https://datasf.org/" target="_blank" rel="noreferrer">DataSF</a> · Map © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">OpenStreetMap</a></footer>
+
+    <footer>
+      <p><strong>Roam &amp; Relish</strong> is an independent exploration of San Francisco’s mobile food scene.</p>
+      <span>Open data from <a href="https://data.sf.gov/" target="_blank" rel="noreferrer">DataSF</a> · Map © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">OpenStreetMap</a></span>
+    </footer>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script type="module" src="app.js"></script>
   </body>
