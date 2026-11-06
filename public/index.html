@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Find food trucks serving San Francisco right now.">
+    <title>Roam &amp; Relish | San Francisco food trucks</title>
+    <link rel="preconnect" href="https://unpkg.com">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+    <link rel="stylesheet" href="/styles.css">
+  </head>
+  <body>
+    <header class="topbar">
+      <a class="brand" href="/" aria-label="Roam and Relish home">
+        <span class="brand-mark">R</span>
+        <span>Roam &amp; Relish</span>
+      </a>
+      <span class="data-note">Live DataSF listings</span>
+    </header>
+    <main class="app-shell">
+      <section class="hero">
+        <p class="eyebrow">San Francisco, served</p>
+        <h1>Find your next<br><em>great bite.</em></h1>
+        <p class="hero-copy">Explore the city’s food trucks, discover what’s nearby, and make lunch a little more memorable.</p>
+        <div class="search-wrap">
+          <label for="search">Search by truck, cuisine, or ingredient</label>
+          <div class="search-row">
+            <input id="search" type="search" placeholder="Try “tacos” or “coffee”" autocomplete="off">
+            <button id="locate" type="button" title="Use my location" aria-label="Use my location">⌖</button>
+          </div>
+        </div>
+        <div class="stats" aria-live="polite">
+          <strong id="count">Loading...</strong>
+          <span>trucks on the map</span>
+        </div>
+      </section>
+      <section class="map-panel" aria-label="Food truck map">
+        <div id="map"></div>
+        <div class="map-legend"><span class="legend-dot"></span> Food truck location</div>
+      </section>
+      <aside class="results-panel">
+        <div class="panel-heading">
+          <div>
+            <p class="eyebrow">Browse the map</p>
+            <h2>Food trucks</h2>
+          </div>
+          <button id="clear" class="text-button" type="button" hidden>Clear</button>
+        </div>
+        <div id="results" class="results" aria-live="polite"></div>
+      </aside>
+    </main>
+    <footer>Built with open data from <a href="https://datasf.org/" target="_blank" rel="noreferrer">DataSF</a> · Map © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">OpenStreetMap</a></footer>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script type="module" src="/app.js"></script>
+  </body>
+</html>

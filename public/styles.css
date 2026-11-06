@@ -1,0 +1,41 @@
+@import url("https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,600;1,600&display=swap");
+
+:root { --ink: #1c2822; --muted: #6f7a72; --cream: #f7f5ef; --paper: #fffefa; --green: #2f674c; --line: #e7e5dc; --orange: #e97947; }
+* { box-sizing: border-box; }
+body { margin: 0; color: var(--ink); background: var(--cream); font-family: "DM Sans", sans-serif; }
+a { color: inherit; }
+.topbar { height: 72px; display: flex; align-items: center; justify-content: space-between; padding: 0 5vw; border-bottom: 1px solid var(--line); background: var(--paper); }
+.brand { display: flex; align-items: center; gap: 10px; text-decoration: none; font-weight: 700; letter-spacing: -.03em; }
+.brand-mark { display: grid; place-items: center; width: 30px; height: 30px; border-radius: 50%; color: #fff; background: var(--green); font-family: Georgia, serif; font-size: 19px; }
+.data-note, footer { color: var(--muted); font-size: 12px; }
+.app-shell { display: grid; grid-template-columns: minmax(270px, 30%) 1fr minmax(290px, 27%); min-height: calc(100vh - 112px); }
+.hero { padding: 9vh 4vw 4vw 7vw; }
+.eyebrow { margin: 0 0 14px; color: var(--orange); font-size: 11px; font-weight: 700; letter-spacing: .13em; text-transform: uppercase; }
+h1 { margin: 0; font-size: clamp(42px, 5vw, 72px); letter-spacing: -.07em; line-height: .96; }
+h1 em { color: var(--green); font-family: "Playfair Display", Georgia, serif; font-weight: 600; letter-spacing: -.04em; }
+.hero-copy { max-width: 310px; margin: 28px 0 50px; color: var(--muted); font-size: 15px; line-height: 1.65; }
+.search-wrap label { display: block; margin-bottom: 9px; font-size: 11px; font-weight: 700; }
+.search-row { display: flex; border-bottom: 1px solid var(--ink); }
+input { width: 100%; padding: 11px 0; border: 0; outline: 0; color: var(--ink); background: transparent; font: inherit; }
+input::placeholder { color: #9da69f; }
+button { cursor: pointer; font: inherit; }
+#locate { border: 0; color: var(--green); background: transparent; font-size: 26px; }
+.stats { display: flex; align-items: baseline; gap: 7px; margin-top: 40px; color: var(--muted); font-size: 12px; }
+.stats strong { color: var(--ink); font-size: 22px; }
+.map-panel { position: relative; min-height: 530px; border-left: 1px solid var(--line); border-right: 1px solid var(--line); }
+#map { width: 100%; height: 100%; min-height: 530px; }
+.map-legend { position: absolute; z-index: 500; right: 16px; bottom: 18px; padding: 8px 11px; border-radius: 4px; color: var(--muted); background: rgba(255,254,250,.92); box-shadow: 0 2px 10px #26352c22; font-size: 11px; }
+.legend-dot { display: inline-block; width: 8px; height: 8px; margin-right: 5px; border-radius: 50%; background: var(--orange); }
+.results-panel { padding: 9vh 2.4vw 3vw; background: var(--paper); }
+.panel-heading { display: flex; align-items: flex-start; justify-content: space-between; }
+h2 { margin: 0 0 24px; font-size: 27px; letter-spacing: -.06em; }
+.text-button { border: 0; color: var(--green); background: none; font-size: 12px; text-decoration: underline; }
+.results { max-height: 62vh; overflow-y: auto; }
+.truck-card { padding: 17px 0; border-top: 1px solid var(--line); }
+.truck-card h3 { margin: 0 0 6px; font-size: 15px; }
+.truck-card p { margin: 4px 0; color: var(--muted); font-size: 12px; line-height: 1.45; }
+.truck-card button { padding: 0; border: 0; color: var(--green); background: none; font-size: 12px; font-weight: 700; }
+.empty { color: var(--muted); font-size: 13px; line-height: 1.6; }
+footer { padding: 18px 5vw; border-top: 1px solid var(--line); background: var(--paper); }
+@media (max-width: 1000px) { .app-shell { grid-template-columns: 1fr 1fr; } .hero { padding: 7vw; } .map-panel { min-height: 500px; } .results-panel { grid-column: 1 / -1; padding: 35px 7vw; } .results { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0 30px; max-height: none; } }
+@media (max-width: 650px) { .topbar { padding: 0 6vw; } .data-note { display: none; } .app-shell { display: block; } .hero { padding: 48px 7vw 34px; } .hero-copy { margin-bottom: 32px; } .map-panel, #map { min-height: 400px; } .results-panel { padding: 38px 7vw; } .results { display: block; } }
