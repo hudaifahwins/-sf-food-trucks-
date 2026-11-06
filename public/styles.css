@@ -5,6 +5,10 @@ html { scroll-behavior:smooth; }
 body { margin:0; color:var(--ink); background:var(--cream); font-family:"DM Sans",sans-serif; }
 button,input { font:inherit; }
 button { cursor:pointer; }
+button:focus-visible,input:focus-visible { outline:3px solid #e8794f66; outline-offset:3px; }
+.chips button,.map-toolbar button,.truck-card button,.retry-button,.clear-button,.locate-button { transition:transform .2s ease, color .2s ease, background-color .2s ease, border-color .2s ease, box-shadow .2s ease; }
+.chips button:hover,.map-toolbar button:hover,.truck-card button:hover,.retry-button:hover { transform:translateY(-2px); }
+.chips button:active,.map-toolbar button:active,.truck-card button:active,.retry-button:active,.clear-button:active,.locate-button:active { transform:translateY(1px) scale(.97); }
 a { color:inherit; }
 .topbar { height:76px; display:flex; align-items:center; justify-content:space-between; padding:0 clamp(24px,6vw,96px); border-bottom:1px solid var(--line); background:var(--paper); }
 .brand { display:flex; align-items:center; gap:11px; color:var(--ink); text-decoration:none; font-size:15px; font-weight:700; letter-spacing:-.04em; }
@@ -30,7 +34,7 @@ h1 em { color:var(--green); font-family:"Playfair Display",Georgia,serif; font-w
 .locate-button.is-loading { animation:pulse 1s infinite; }
 .chips { display:flex; flex-wrap:wrap; gap:8px; margin-top:17px; }
 .chips button { padding:7px 12px; border:1px solid #d5dbd2; border-radius:99px; color:var(--green); background:transparent; font-size:11px; transition:.2s; }
-.chips button:hover { border-color:var(--green); background:#e9f0e9; }
+.chips button:hover { border-color:var(--green); background:#e9f0e9; box-shadow:0 5px 12px #245c4218; }
 .intro-aside { display:flex; align-items:flex-start; gap:35px; padding-top:12px; }
 .stamp { display:grid; place-items:center; width:76px; height:76px; border:1px solid #bdc9bc; border-radius:50%; color:var(--green); font-family:Georgia,serif; font-size:17px; line-height:.76; text-align:center; transform:rotate(8deg); }
 .stamp b { color:var(--orange); font-size:10px; font-style:italic; font-weight:400; }
@@ -51,7 +55,7 @@ h2 { margin:0; font-size:31px; letter-spacing:-.07em; }
 .results-meta { display:flex; justify-content:space-between; gap:10px; margin:14px 0 5px; color:var(--muted); font-size:11px; }
 .results-meta button { padding:0; border:0; color:var(--green); background:none; font-size:11px; text-decoration:underline; }
 .results { max-height:510px; overflow:auto; padding-right:8px; }
-.truck-card { padding:19px 0; border-top:1px solid var(--line); }
+.truck-card { padding:19px 0; border-top:1px solid var(--line); animation:card-in .35s ease both; }
 .card-topline { display:flex; justify-content:space-between; color:#a2aaa3; font-size:10px; font-weight:700; letter-spacing:.08em; }
 .distance { color:var(--orange); letter-spacing:0; }
 .truck-card h3 { margin:10px 0 7px; font-size:16px; letter-spacing:-.03em; }
@@ -68,5 +72,6 @@ h2 { margin:0; font-size:31px; letter-spacing:-.07em; }
 footer { display:flex; justify-content:space-between; gap:20px; padding:24px clamp(24px,6vw,96px); color:var(--muted); background:var(--paper); font-size:11px; }
 footer p { margin:0; } footer strong { color:var(--ink); } footer a { color:var(--green); font-weight:700; }
 @keyframes spin { to { transform:rotate(360deg); } } @keyframes pulse { 50% { opacity:.35; } }
+@keyframes card-in { from { opacity:0; transform:translateY(7px); } to { opacity:1; transform:translateY(0); } }
 @media (max-width:900px) { .intro { padding-bottom:60px; } .intro-aside { display:none; } .explorer { grid-template-columns:1fr; } .map-panel,#map { min-height:440px; } .results-panel { padding:42px 7vw; } .results { max-height:none; display:grid; grid-template-columns:repeat(2,1fr); gap:0 30px; } }
 @media (max-width:600px) { .topbar { height:65px; padding:0 20px; } .topbar-meta { display:none; } .intro { padding:62px 24px 52px; } .lead { margin:27px 0 35px; font-size:14px; } .explorer { display:block; } .map-panel,#map { min-height:360px; } .results-panel { padding:38px 24px; } .results { display:block; } footer { flex-direction:column; padding:22px 24px; } }
