@@ -19,6 +19,7 @@ let trucks = [];
 let userLocation = null;
 let sortByDistance = false;
 let debounceTimer;
+let requestSequence = 0;
 
 function escapeHtml(value) {
   return String(value).replace(/[&<>"']/g, (character) => ({
@@ -96,21 +97,26 @@ function normalizeRecords(records) {
   })).filter((truck) => Number.isFinite(truck.latitude) && Number.isFinite(truck.longitude));
 }
 
-async function loadTrucks() {
+async function loadTrucks(query = "") {
+  const requestId = ++requestSequence;
   setLoading();
   try {
     const apiUrl = window.location.hostname.endsWith("github.io")
-      ? "https://data.sf.gov/resource/rqzj-sfat.json?$limit=1000&$where=latitude IS NOT NULL AND longitude IS NOT NULL"
-      : "/api/food-trucks?limit=1000";
+      ? `https://data.sf.gov/resource/rqzj-sfat.json?$limit=2000&$where=latitude IS NOT NULL AND longitude IS NOT NULL${query ? `&$q=${encodeURIComponent(query.slice(0, 100))}` : ""}`
+      : `/api/food-trucks?limit=2000${query ? `&q=${encodeURIComponent(query.slice(0, 100))}` : ""}`;
     const response = await fetch(apiUrl);
     if (!response.ok) throw new Error("Request failed");
     const payload = await response.json();
+    if (requestId !== requestSequence) return;
     trucks = normalizeRecords(Array.isArray(payload) ? payload : payload.data);
     count.textContent = trucks.length;
-    updated.textContent = `Updated just now · ${trucks.length} locations`;
+    updated.textContent = query
+      ? `Search results for “${query}” · ${trucks.length} locations`
+      : `Updated just now · ${trucks.length} locations`;
     sortNearby.hidden = false;
     render(currentItems());
   } catch (error) {
+    if (requestId !== requestSequence) return;
     console.error(error);
     status.textContent = "Offline";
     updated.textContent = "DataSF could not be reached";
@@ -125,18 +131,18 @@ function updateResults() {
 
 searchInput.addEventListener("input", () => {
   clearTimeout(debounceTimer);
-  debounceTimer = setTimeout(updateResults, 120);
+  debounceTimer = setTimeout(() => loadTrucks(searchInput.value.trim()), 250);
 });
 document.querySelectorAll("[data-query]").forEach((button) => {
   button.addEventListener("click", () => {
     searchInput.value = button.dataset.query;
-    updateResults();
+    loadTrucks(searchInput.value);
     searchInput.focus();
   });
 });
 clearButton.addEventListener("click", () => {
   searchInput.value = "";
-  updateResults();
+  loadTrucks();
   searchInput.focus();
 });
 sortNearby.addEventListener("click", () => {
