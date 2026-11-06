@@ -50,7 +50,7 @@ async function loadTrucks(query = "") {
   results.innerHTML = '<p class="empty">Loading the latest listings...</p>';
   try {
     const apiUrl = window.location.hostname.endsWith("github.io")
-      ? `https://data.sfgov.org/resource/rqzj-sfat.json?$limit=1000&$where=latitude IS NOT NULL AND longitude IS NOT NULL${query ? `&$q=${encodeURIComponent(query)}` : ""}`
+      ? `https://data.sf.gov/resource/rqzj-sfat.json?$limit=1000&$where=latitude IS NOT NULL AND longitude IS NOT NULL${query ? `&$q=${encodeURIComponent(query)}` : ""}`
       : `/api/food-trucks${query ? `?q=${encodeURIComponent(query)}` : ""}`;
     const response = await fetch(apiUrl);
     if (!response.ok) throw new Error("Request failed");

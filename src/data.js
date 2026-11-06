@@ -1,4 +1,4 @@
-const DATA_URL = "https://data.sfgov.org/resource/rqzj-sfat.json";
+const DATA_URL = "https://data.sf.gov/resource/rqzj-sfat.json";
 
 function toNumber(value) {
   if (value === null || value === undefined || String(value).trim() === "") return null;
